@@ -4,6 +4,7 @@
 from decimal import MAX_EMAX
 import json
 import re
+import os
 from fpdf import FPDF
 
 def json2pdf(filename):
@@ -11,7 +12,8 @@ def json2pdf(filename):
 	# variable pdf
 	pdf = FPDF()
 
-	with open(filename + ".json", "r") as f:
+	# read the file and get data dictionary
+	with open("data/" + filename + ".json", "r") as f:
 		data = json.load(f)
 		data_str = data[0]
 		data_dict = json.loads(data_str)
@@ -24,6 +26,7 @@ def json2pdf(filename):
 	# that you want in the pdf
 	pdf.set_font("Arial", size = 10)
 
+	# normalize the scores
 	max_score = 0
 	for i in range(len(pages_list)):
 		page = pages_list[i]["rows"]
@@ -51,7 +54,7 @@ def json2pdf(filename):
 				# create a cell
 				pdf.set_fill_color(255, 255 - score / max_score * 255, 255)
 				word_count += 1
-				if word_count == 15:
+				if word_count == 15: # manual line break
 					row_str = " ".join(row)
 					pdf.cell(len(row_str) * 3, 5, txt = row_str, fill = True, align = 'L')
 					pdf.ln()
@@ -65,4 +68,9 @@ def json2pdf(filename):
 	pdf.output(filename + ".pdf")
 
 if __name__ == "__main__":
-    json2pdf("test")
+	directory = 'data'
+	# iterate over files in
+	# that directory
+
+	for filename in os.scandir(directory):
+		json2pdf(filename.name.strip(".json"))
