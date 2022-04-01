@@ -11,7 +11,7 @@ pip install fpdf
 git clone git@github.com:Glanfaloth/LawTech-visualization.git
 ```
 3. place the data folder inside
-
+```
     .
     ├── visualization.py
     ├── data
@@ -21,7 +21,7 @@ git clone git@github.com:Glanfaloth/LawTech-visualization.git
     │   ├── 1_1_1.json
     │   └── ...
     └── ...
-
+```
 4. run the script
 ```
 python3 visualization.py
