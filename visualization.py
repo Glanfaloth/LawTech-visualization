@@ -1,7 +1,9 @@
 # Python program to create
 # a pdf file
 
+from decimal import MAX_EMAX
 import json
+import re
 from fpdf import FPDF
 
 # save FPDF() class into a
@@ -21,22 +23,38 @@ pages_list = attention_scores_dict["pages"]
 # that you want in the pdf
 pdf.set_font("Arial", size = 10)
 
+max_score = 0
+for i in range(len(pages_list)):
+	page = pages_list[i]["rows"]
+	for j in range(len(page)):
+		row_list = page[j]["words"]
+		for k in range(len(row_list)):
+			word_dict = row_list[k]
+			score = word_dict["s"][0]
+			max_score = max(max_score, score)
+
 for i in range(len(pages_list)):
 	page = pages_list[i]["rows"]
 	# Add a page
 	pdf.add_page()
+	word_count = 0
 	for j in range(len(page)):
 		row_list = page[j]["words"]
 		row = []
 		for k in range(len(row_list)):
 			word_dict = row_list[k]
 			word = word_dict["w"][0]
+			if word != "" and word != ":" and not re.match("^[0-9]+\.$", word):
+				row.append(word)
 			score = word_dict["s"][0]
-			row.append(word)
-		row_str = " ".join(row)
-		# create a cell
-		pdf.cell(len(row_str) * 2, 5, txt = row_str, fill = True,
-				ln = j, align = 'C')
+			# create a cell
+			pdf.set_fill_color(255, 255 - score / max_score * 255, 255)
+			pdf.cell(len(word) * 3, 5, txt = word, fill = True, align = 'L')
+			word_count += 1
+			if word_count == 10:
+				pdf.ln()
+				word_count = 0
+		pdf.ln()
 
 # save the pdf with name .pdf
 pdf.output("test.pdf")
