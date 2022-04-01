@@ -26,3 +26,4 @@ git clone git@github.com:Glanfaloth/LawTech-visualization.git
 ```
 python3 visualization.py
 ```
+5. pdf files will be generated automatically
