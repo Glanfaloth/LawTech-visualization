@@ -37,9 +37,9 @@ for i in range(len(pages_list)):
 	page = pages_list[i]["rows"]
 	# Add a page
 	pdf.add_page()
-	word_count = 0
 	for j in range(len(page)):
 		row_list = page[j]["words"]
+		word_count = 0
 		row = []
 		for k in range(len(row_list)):
 			word_dict = row_list[k]
@@ -49,11 +49,15 @@ for i in range(len(pages_list)):
 			score = word_dict["s"][0]
 			# create a cell
 			pdf.set_fill_color(255, 255 - score / max_score * 255, 255)
-			pdf.cell(len(word) * 3, 5, txt = word, fill = True, align = 'L')
 			word_count += 1
-			if word_count == 10:
+			if word_count == 15:
+				row_str = " ".join(row)
+				pdf.cell(len(row_str) * 3, 5, txt = row_str, fill = True, align = 'L')
 				pdf.ln()
 				word_count = 0
+				row = []
+		row_str = " ".join(row)
+		pdf.cell(len(row_str) * 3, 5, txt = row_str, fill = True, align = 'L')
 		pdf.ln()
 
 # save the pdf with name .pdf
